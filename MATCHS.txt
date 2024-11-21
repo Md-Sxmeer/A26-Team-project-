@@ -1,0 +1,162 @@
+match_data <- read.csv("MATCHS.csv")
+head(match_data)
+str(match_data)
+match_data$Toss_And_Match_Winner <- match_data$Toss_Winner == match_data$Match_Winner
+match_data$Toss_And_Match_Winner <- as.numeric(match_data$Toss_And_Match_Winner)
+summary(match_data$Toss_And_Match_Winner)
+
+# Calculate proportions
+toss_match_counts <- table(match_data$Toss_And_Match_Winner)
+labels <- c("No", "Yes")
+# Pie chart
+pie(toss_match_counts, labels = labels, col = c("red", "green"),
+main = "Proportion of Toss Winners also Winning Matches")
+# Histogram
+ggplot(match_data, aes(x = Toss_And_Match_Winner)) +
+geom_histogram(binwidth = 1, fill = "skyblue", color = "black", alpha = 0.7) +
+labs(title = "Histogram: Toss Winners also Being Match Winners",
+x = "Toss Winner is Match Winner (0 = No, 1 = Yes)",
+y = "Frequency") +
+scale_x_continuous(breaks = c(0, 1), labels = c("No", "Yes")) +
+theme_minimal()
+# Save a plot
+ggsave("bar_plot_toss_match_winner.png")
+# Install ggplot2 if not installed
+if (!require(ggplot2)) install.packages("ggplot2")
+library(ggplot2)
+# Bar plot for Toss and Match Winner
+ggplot(match_data, aes(x = as.factor(Toss_And_Match_Winner), fill = as.factor(Toss_And_Match_Winner))) +
+geom_bar(color = "black") +
+scale_fill_manual(values = c("red", "green"), labels = c("No", "Yes")) +
+labs(title = "Toss Winners vs Match Winners",
+x = "Toss Winner is Match Winner (0 = No, 1 = Yes)",
+y = "Count") +
+theme_minimal()
+ggsave("bar_plot2_toss_match_winner.png")
+# Create a contingency table
+toss_match_table <- table(match_data$Toss_Winner == match_data$Match_Winner)
+# Proportions
+prop_table <- prop.table(toss_match_table)
+prop_table
+# Labels for clarity
+names(prop_table) <- c("Not Toss Winner", "Toss Winner")
+prop_table
+# Contingency table for Toss_Winner vs Match_Winner
+contingency_table <- table(match_data$Toss_Winner, match_data$Match_Winner)
+# Chi-squared test
+chi_test <- chisq.test(contingency_table)
+# View results
+chi_test
+# Create a summary table
+summary_table <- data.frame(
+Category = c("Not Toss Winner", "Toss Winner"),
+Proportion = c(prop_table["Not Toss Winner"], prop_table["Toss Winner"])
+)
+# Plot the proportions
+library(ggplot2)
+ggplot(summary_table, aes(x = Category, y = Proportion, fill = Category)) +
+geom_bar(stat = "identity", color = "black") +
+scale_fill_manual(values = c("red", "green")) +
+labs(title = "Proportion of Matches Won: Toss vs Not Toss Winners",
+x = "Category",
+y = "Proportion of Matches Won") +
+theme_minimal()
+
+
+# Load the dataset
+match_data <- read.csv("MATCHS.csv")
+# View the first few rows to confirm data is loaded correctly
+head(match_data)
+# Check structure of data
+str(match_data)
+# Create a contingency table for Toss_Winner and Match_Winner
+contingency_table <- table(match_data$Toss_Winner, match_data$Match_Winner)
+# Display the table
+print(contingency_table)
+# Perform Chi-squared test
+chi_test <- chisq.test(contingency_table)
+# Display the results
+print(chi_test)
+# Calculate proportions
+prop_table <- prop.table(contingency_table, margin = 1)  # Row-wise proportions
+# Display the proportion table
+print(prop_table)
+# Convert contingency table to data frame for plotting
+library(ggplot2)
+library(reshape2)
+# Install reshape2
+install.packages("reshape2")
+# Load the library after installation
+library(reshape2)
+# Convert contingency table to data frame for plotting
+library(ggplot2)
+library(reshape2)
+# Melt the contingency table
+contingency_df <- as.data.frame(contingency_table)
+colnames(contingency_df) <- c("Toss_Winner", "Match_Winner", "Count")
+# Proportion bar plot
+ggplot(contingency_df, aes(x = Toss_Winner, y = Count, fill = Match_Winner)) +
+geom_bar(stat = "identity", position = "dodge") +
+labs(title = "Toss Winner vs Match Winner",
+x = "Toss Winner",
+y = "Count") +
+scale_fill_manual(values = c("red", "green"), labels = c("Lost", "Won")) +
+theme_minimal()
+unique(match_data$Toss_Winner)
+unique(match_data$Match_Winner)
+# Generate a color palette with enough colors for unique categories
+unique_categories <- length(unique(contingency_df$Match_Winner))
+colors <- RColorBrewer::brewer.pal(n = max(unique_categories, 3), name = "Set3")
+# Install RColorBrewer if not already installed
+if (!require(RColorBrewer)) install.packages("RColorBrewer")
+library(RColorBrewer)
+# Proportion bar plot with a dynamic color palette
+ggplot(contingency_df, aes(x = Toss_Winner, y = Count, fill = Match_Winner)) +
+geom_bar(stat = "identity", position = "dodge") +
+labs(title = "Toss Winner vs Match Winner",
+x = "Toss Winner",
+y = "Count") +
+scale_fill_manual(values = colors) +
+theme_minimal()
+install.packages("RColorBrewer")
+library(RColorBrewer)
+# Convert contingency table to data frame for plotting
+library(ggplot2)
+library(reshape2)
+# Melt the contingency table
+contingency_df <- as.data.frame(contingency_table)
+colnames(contingency_df) <- c("Toss_Winner", "Match_Winner", "Count")
+# Proportion bar plot
+ggplot(contingency_df, aes(x = Toss_Winner, y = Count, fill = Match_Winner)) +
+geom_bar(stat = "identity", position = "dodge") +
+labs(title = "Toss Winner vs Match Winner",
+x = "Toss Winner",
+y = "Count") +
+scale_fill_manual(values = c("red", "green"), labels = c("Lost", "Won")) +
+theme_minimal()
+View(match_data)
+View(contingency_df)
+View(match_data)
+# Inspect unique values
+unique(contingency_df$Toss_Winner)
+unique(contingency_df$Match_Winner)
+# Check counts
+table(contingency_df$Match_Winner)
+# Install RColorBrewer if not installed
+if (!require(RColorBrewer)) install.packages("RColorBrewer")
+library(RColorBrewer)
+# Get the number of unique categories
+num_categories <- length(unique(contingency_df$Match_Winner))
+# Generate a palette with enough colors
+colors <- brewer.pal(n = min(num_categories, 9), name = "Set3")
+# Generate more than 9 colors if needed
+if (num_categories > 9) {
+colors <- colorRampPalette(brewer.pal(9, "Set3"))(num_categories)
+}
+ggplot(contingency_df, aes(x = Toss_Winner, y = Count, fill = as.factor(Match_Winner))) +
+geom_bar(stat = "identity", position = "dodge") +
+labs(title = "Toss Winner vs Match Winner",
+x = "Toss Winner",
+y = "Count") +
+scale_fill_manual(values = colors) +
+theme_minimal()
